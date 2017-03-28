@@ -31,11 +31,6 @@
 				<router_id>172.16.102.104</router_id>
 				<if_id>1</if_id>
 			</destination>	
-			<undir_delay_link>99</undir_delay_link>
-			<undir_min_max_delay>
-				<min>23</min>
-				<max>250</max>
-			</undir_min_max_delay>	
 		</edge>
 		<edge>
 			<source>
@@ -46,11 +41,6 @@
 				<router_id>172.16.102.101</router_id>
 				<if_id>1</if_id>
 			</destination>		
-			<undir_delay_link>99</undir_delay_link>
-			<undir_min_max_delay>
-				<min>23</min>
-				<max>250</max>
-			</undir_min_max_delay>	
 		</edge>
 		<edge>
 			<source>
@@ -61,12 +51,7 @@
 				<router_id>172.16.102.102</router_id>
 				<if_id>1</if_id>
 			</destination>		
-			<undir_delay_link>3000</undir_delay_link>
-			<undir_min_max_delay>
-				<min>150</min>
-				<max>4000</max>
-			</undir_min_max_delay>	
-			</edge>
+		</edge>
 		<edge>
 			<source>
 				<router_id>172.16.102.102</router_id>
@@ -76,11 +61,6 @@
 				<router_id>172.16.102.101</router_id>
 				<if_id>2</if_id>
 			</destination>		
-			<undir_delay_link>3000</undir_delay_link>
-			<undir_min_max_delay>
-				<min>150</min>
-				<max>4000</max>
-			</undir_min_max_delay>	
 			</edge>
 		<edge>
 			<source>
@@ -91,11 +71,6 @@
 				<router_id>172.16.102.103</router_id>
 				<if_id>1</if_id>
 			</destination>	
-			<undir_delay_link>1003</undir_delay_link>
-			<undir_min_max_delay>
-				<min>150</min>
-				<max>4000</max>
-			</undir_min_max_delay>	
 		</edge>
 		<edge>
 			<source>
@@ -106,12 +81,7 @@
 				<router_id>172.16.102.102</router_id>
 				<if_id>2</if_id>
 			</destination>				
-			<undir_delay_link>1003</undir_delay_link>
-			<undir_min_max_delay>
-				<min>150</min>
-				<max>4000</max>
-			</undir_min_max_delay>	
-			</edge>
+		</edge>
 		<edge>
 			<source>
 				<router_id>172.16.102.103</router_id>
@@ -121,11 +91,6 @@
 				<router_id>172.16.102.104</router_id>
 				<if_id>2</if_id>
 			</destination>	
-			<undir_delay_link>323</undir_delay_link>
-			<undir_min_max_delay>
-				<min>150</min>
-				<max>4000</max>
-			</undir_min_max_delay>	
 		</edge>
 		<edge>
 			<source>
@@ -136,11 +101,6 @@
 				<router_id>172.16.102.103</router_id>
 				<if_id>2</if_id>
 			</destination>				
-			<undir_delay_link>323</undir_delay_link>
-			<undir_min_max_delay>
-				<min>150</min>
-				<max>4000</max>
-			</undir_min_max_delay>	
 		</edge>
 		<edge>
 			<source>
@@ -151,11 +111,6 @@
 				<router_id>172.16.102.104</router_id>
 				<if_id>3</if_id>
 			</destination>
-			<undir_delay_link>2232</undir_delay_link>
-			<undir_min_max_delay>
-				<min>150</min>
-				<max>4000</max>
-			</undir_min_max_delay>	
 		</edge>
 		<edge>
 			<source>
@@ -166,11 +121,6 @@
 				<router_id>172.16.102.102</router_id>
 				<if_id>3</if_id>
 			</destination>			
-			<undir_delay_link>2232</undir_delay_link>
-			<undir_min_max_delay>
-				<min>150</min>
-				<max>4000</max>
-			</undir_min_max_delay>	
 		</edge>
 
 	</domain>

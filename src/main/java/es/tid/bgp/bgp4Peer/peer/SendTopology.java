@@ -60,7 +60,7 @@ public class SendTopology implements Runnable {
 
 	private boolean isASnumber= false;
 	private boolean send4AS=false;
-
+	private boolean enableNew= false;
 
 	
 	
@@ -238,50 +238,18 @@ public class SendTopology implements Runnable {
 		//Andrea
 		log.debug("Sending IT Resources");
 		BGP4Update update = createMsgUpdateITNodeNLRI(domainID, itResources);
-		sendMessage(update);
-//		Iterator<Object> vertexIt = vertexSet.iterator();	
-//		//Enviamos primero los nodos. Un Node NLRI por cada nodo.
-//		while (vertexIt.hasNext()){		
-//			Inet4Address node = (Inet4Address)vertexIt.next();
-//			//log.info(" XXXX node: "+ node);
-//			Node_Info node_info = NodeTable.get(node);
-//			//log.info(" XXXX node_info: "+ node_info);
-//			if (node_info!=null){
-//				log.debug("Sending node: ("+node+")");
-//				//Mandamos NodeNLRI
-//				BGP4Update update = createMsgUpdateNodeNLRI(node_info);
-//				sendMessage(update);	
-//			}else {
-//				log.error("Node "+node+ " HAS NO node_info in NodeTable");
-//			}
-//			
-//
-//		}
+		if (enableNew){
+			sendMessage(update);
+		}
 	}
 
 	private void sendMDPCENLRI(String domainID, PCEInfo IP){
 		//Andrea
 		log.debug("Sending PCE Address");
 		BGP4Update update = createMsgUpdateMDPCENLRI(domainID, IP);
-		sendMessage(update);
-//		Iterator<Object> vertexIt = vertexSet.iterator();
-//		//Enviamos primero los nodos. Un Node NLRI por cada nodo.
-//		while (vertexIt.hasNext()){
-//			Inet4Address node = (Inet4Address)vertexIt.next();
-//			//log.info(" XXXX node: "+ node);
-//			Node_Info node_info = NodeTable.get(node);
-//			//log.info(" XXXX node_info: "+ node_info);
-//			if (node_info!=null){
-//				log.debug("Sending node: ("+node+")");
-//				//Mandamos NodeNLRI
-//				BGP4Update update = createMsgUpdateNodeNLRI(node_info);
-//				sendMessage(update);
-//			}else {
-//				log.error("Node "+node+ " HAS NO node_info in NodeTable");
-//			}
-//
-//
-//		}
+		if (enableNew){
+			sendMessage(update);
+		}
 	}
 
 	/**
@@ -418,11 +386,9 @@ public class SendTopology implements Runnable {
 					if (isTest){
 						log.debug("Sending BGP4 update to:" + destination+" with no check on the ID since it is test");
 						if (session.getMyAutonomousSystem()!= session.getRemoteAutonomousSystem()){
-							log.info ("size before: "+ String.valueOf(update.getPathAttributes().size()));
 							for (PathAttribute attr: update.getPathAttributes()){
 								if (attr.getTypeCode()== PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_LOCAL_PREF)
 									update.getPathAttributes().remove(attr);
-									log.info ("size after removing: "+ String.valueOf(update.getPathAttributes().size()));
 							}
 						}
 						session.sendBGP4Message(update);
@@ -1098,7 +1064,9 @@ public class SendTopology implements Runnable {
 		}
 		
 		if (linkStateNeeded){
-			pathAttributes.add(linkStateAttribute);
+			if (enableNew){
+				pathAttributes.add(linkStateAttribute);
+			}
 		}
 		//2. NLRI
 		LinkNLRI linkNLRI = new LinkNLRI();
@@ -1166,6 +1134,7 @@ public class SendTopology implements Runnable {
 		}
 		
 		//2.2.3 LinkDelay
+		if (enableNew){
 		if (te_info != null){
 			if(te_info.getUndirLinkDelay() != null){
 				int undirLinkDelay = te_info.getUndirLinkDelay().getDelay();
@@ -1212,6 +1181,7 @@ public class SendTopology implements Runnable {
 				linkNLRI.setUndirectionalUtilizedBwTLV(uSTLV);
 			}
 			
+		}
 		}
 		linkNLRI.setIdentifier(this.identifier);
 		BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
