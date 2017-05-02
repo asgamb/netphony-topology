@@ -54,13 +54,14 @@ public class SendTopology implements Runnable {
 	private BGP4SessionsInformation bgp4SessionsInformation;
 	private Logger log;
 	private int instanceId=1;
+	private int layer=0; //0->IP, 1-> optical
 	private boolean sendIntraDomainLinks=false;
 	private int ASnumber=1;
 	private int LocalPref=100;
 
 	private boolean isASnumber= false;
 	private boolean send4AS=false;
-	private boolean enableNew= false;
+	private boolean enableNew= true;
 
 	
 	
@@ -1070,8 +1071,8 @@ public class SendTopology implements Runnable {
 		}
 		//2. NLRI
 		LinkNLRI linkNLRI = new LinkNLRI();
-		linkNLRI.setProtocolID(ProtocolIDCodes.Unknown_Protocol_ID);
-		linkNLRI.setIdentifier(instanceId);
+		linkNLRI.setProtocolID(ProtocolIDCodes.Static_Protocol_ID);
+		linkNLRI.setIdentifier(layer);
 	
 		//2.1. Local Y Remote Descriptors
 		LocalNodeDescriptorsTLV localNodeDescriptors = new LocalNodeDescriptorsTLV();
@@ -1085,10 +1086,12 @@ public class SendTopology implements Runnable {
 		//Complete Dummy TLVs
 		BGPLSIdentifierNodeDescriptorSubTLV bGPLSIDSubTLV =new BGPLSIdentifierNodeDescriptorSubTLV();
 		bGPLSIDSubTLV.setBGPLS_ID(this.localBGPLSIdentifer);
-		localNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
+		//temp disabled
+		// localNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
 		AreaIDNodeDescriptorSubTLV areaID = new AreaIDNodeDescriptorSubTLV();
 		areaID.setAREA_ID(this.localAreaID);
-		localNodeDescriptors.setAreaID(areaID);
+		//temp disabled
+		//localNodeDescriptors.setAreaID(areaID);
 
 		IGPRouterIDNodeDescriptorSubTLV igpRouterIDDNSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
 		igpRouterIDDNSubTLV.setIpv4AddressOSPF(addressList.get(1));	
@@ -1110,8 +1113,9 @@ public class SendTopology implements Runnable {
 			
 		}
 		//Complete Dummy TLVs
-		remoteNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
-		remoteNodeDescriptors.setAreaID(areaID);
+		//remoteNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
+		//temp disabled
+		//remoteNodeDescriptors.setAreaID(areaID);
 
 		linkNLRI.setLocalNodeDescriptors(localNodeDescriptors);
 		linkNLRI.setRemoteNodeDescriptorsTLV(remoteNodeDescriptors);
