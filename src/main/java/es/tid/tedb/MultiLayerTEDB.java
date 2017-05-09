@@ -456,4 +456,14 @@ public class MultiLayerTEDB implements DomainTEDB {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Slices getSlices() {
+		return null;
+	}
+
+	@Override
+	public void setSlices(Slices slices) {
+
+	}
 }

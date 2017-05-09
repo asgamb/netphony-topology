@@ -14,6 +14,8 @@ import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.Undirectio
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkLossDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalResidualBandwidthDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalUtilizedBandwidthDescriptorSubTLV;
+//import es.tid.bgp.bgp4Peer.peer.MapKeyValue;
+import es.tid.bgp.bgp4.update.fields.MapKeyValue;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AdministrativeGroup;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.IPv4RemoteASBRID;
@@ -29,6 +31,8 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.rsvp.constructs.gmpls.DWDMWavelengthLabel;
 
+import java.util.LinkedList;
+
 public class IT_Resources {
 	
 	private String controllerIT;
@@ -37,7 +41,7 @@ public class IT_Resources {
 	private String storage;
 	private String learntFrom;
 	private String domainID;
-
+	private LinkedList<MapKeyValue> slicesList;
 	/**
 	 * TEDB logger
 	 */
@@ -71,6 +75,15 @@ public class IT_Resources {
 	public void setStorage(String storage) {
 		this.storage = storage;
 	}
+
+	public LinkedList<MapKeyValue> getSlices() {
+		return slicesList;
+	}
+
+	public void setSlices(LinkedList<MapKeyValue> slices) {
+		this.slicesList = slices;
+	}
+
 
 	/**
 	 * Funcion que transforma una cantidad de bits en el numero de bytes que necesita 

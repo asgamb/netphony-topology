@@ -265,8 +265,8 @@ public class TopologyModuleParams
 	 * Port of service-topology Server TAPI
 	 */
         private int exportTAPIPort=8887;
-	
-        /**
+
+	/**
 	 * Active COP service-topology exporter
 	 */
 	private boolean isTAPIwriting =false;

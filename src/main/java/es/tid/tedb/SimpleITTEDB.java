@@ -403,8 +403,15 @@ String topoString="";
 		
 	}
 
+	@Override
+	public Slices getSlices() {
+		return null;
+	}
 
-	
-	
+	@Override
+	public void setSlices(Slices slices) {
+
+	}
+
 
 }

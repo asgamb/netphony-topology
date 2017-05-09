@@ -1,10 +1,7 @@
 package es.tid.bgp.bgp4Peer.peer;
 
 import es.tid.bgp.bgp4.messages.BGP4Update;
-import es.tid.bgp.bgp4.update.fields.ITNodeNLRI;
-import es.tid.bgp.bgp4.update.fields.LinkNLRI;
-import es.tid.bgp.bgp4.update.fields.NodeNLRI;
-import es.tid.bgp.bgp4.update.fields.PathAttribute;
+import es.tid.bgp.bgp4.update.fields.*;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.*;
 import es.tid.bgp.bgp4.update.tlv.LocalNodeDescriptorsTLV;
 import es.tid.bgp.bgp4.update.tlv.ProtocolIDCodes;
@@ -23,6 +20,7 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.tedb.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import es.tid.bgp.bgp4.update.fields.MapKeyValue;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
@@ -139,7 +137,11 @@ public class SendTopology implements Runnable {
 							if (((DomainTEDB)ted).getItResources()!=null){
 								sendITNodeNLRI( domainID, ((DomainTEDB)ted).getItResources());
 							}
-			
+							if (((DomainTEDB)ted).getSlices()!=null){
+								log.info("Qui ok ");
+								sendSliceNLRI(domainID, ((DomainTEDB)ted).getSlices());
+							}
+
 						}
 				
 
@@ -199,13 +201,57 @@ public class SendTopology implements Runnable {
 	 * This function sends a BGP4 update message (encoded in a ITNodeNLRI) for each node in the set 
 	 * @param vertexIt
 	 */
+	private void sendSliceNLRI(String domainID, Slices slice){
+		//Andrea
 
+		if ( (slice.getSlices()!=null)&& (slice.getSlices().size()>0)){
+			for (int i=0; i< slice.getSlices().size();i++){
+				MapKeyValue temp= slice.getSlices().get(i);
+				log.info("Sending Slice with key "+temp.key+" and value "+temp.value);
+				BGP4Update update = createMsgUpdateSliceNLRI(domainID, temp, slice);
+				sendMessage(update);
+
+			}
+		}
+
+
+//		Iterator<Object> vertexIt = vertexSet.iterator();
+//		//Enviamos primero los nodos. Un Node NLRI por cada nodo.
+//		while (vertexIt.hasNext()){
+//			Inet4Address node = (Inet4Address)vertexIt.next();
+//			//log.info(" XXXX node: "+ node);
+//			Node_Info node_info = NodeTable.get(node);
+//			//log.info(" XXXX node_info: "+ node_info);
+//			if (node_info!=null){
+//				log.debug("Sending node: ("+node+")");
+//				//Mandamos NodeNLRI
+//				BGP4Update update = createMsgUpdateNodeNLRI(node_info);
+//				sendMessage(update);
+//			}else {
+//				log.error("Node "+node+ " HAS NO node_info in NodeTable");
+//			}
+//
+//
+//		}
+	}
 
 	private void sendITNodeNLRI(String domainID, IT_Resources itResources){
 		//Andrea
-		log.debug("Sending IT REsources");
+		log.debug("Sending IT Resources");
 		BGP4Update update = createMsgUpdateITNodeNLRI(domainID, itResources);
 		sendMessage(update);
+
+		/*if ( (itResources.getSlices()!=null)&& (itResources.getSlices().size()>0)){
+			for (int i=0; i< itResources.getSlices().size();i++){
+				MapKeyValue temp= itResources.getSlices().get(i);
+				log.info("Sending Slice with key "+temp.key+" and value "+temp.value);
+				BGP4Update update1 = createMsgUpdateSliceNLRI(domainID, temp, itResources);
+				sendMessage(update1);
+
+			}
+		}
+		*/
+
 //		Iterator<Object> vertexIt = vertexSet.iterator();	
 //		//Enviamos primero los nodos. Un Node NLRI por cada nodo.
 //		while (vertexIt.hasNext()){		
@@ -490,6 +536,67 @@ public class SendTopology implements Runnable {
 		
 		}
 
+	private  BGP4Update createMsgUpdateSliceNLRI(String domainID, MapKeyValue element, Slices slice){
+		try{
+
+			BGP4Update update= new BGP4Update();
+			//Path Attributes
+			ArrayList<PathAttribute> pathAttributes = update.getPathAttributes();
+			//Origin
+			OriginAttribute or = new OriginAttribute();
+			or.setValue(PathAttributesTypeCode.PATH_ATTRIBUTE_ORIGIN_IGP);
+			pathAttributes.add(or);
+
+			//AS_PATH
+			if (send4AS==true) {
+				AS4_Path_Attribute as_path = new AS4_Path_Attribute();
+				AS4_Path_Segment as_path_seg = new AS4_Path_Segment();
+				long[] segs = new long[1];
+				segs[0] = 65522;
+				as_path_seg.setSegments(segs);
+				as_path.getAsPathSegments().add(as_path_seg);
+				pathAttributes.add(as_path);
+			}
+			else {
+				AS_Path_Attribute as_path = new AS_Path_Attribute();
+				AS_Path_Segment as_path_seg = new AS_Path_Segment();
+				int[] segs = new int[1];
+				segs[0] = 65522;
+				as_path_seg.setSegments(segs);
+				as_path.getAsPathSegments().add(as_path_seg);
+				pathAttributes.add(as_path);
+			}
+
+			//NLRI
+			SliceNLRI SliceNLRI = new SliceNLRI();
+			SliceNLRI.setNodeId(domainID);
+			SliceNLRI.setKey(element.getKey());
+			SliceNLRI.setValue(element.getValue());
+
+			update.setLearntFrom(slice.getLearntFrom());
+
+			log.info("Creating Slice Update related to domain "+domainID+" with key= "+SliceNLRI.getKey()+" and value="+SliceNLRI.getValue());
+
+			//itNodeNLRI.setLocalNodeDescriptors(localNodeDescriptors);
+			BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
+			ra.setLsNLRI(SliceNLRI);
+			pathAttributes.add(ra);
+			return update;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+
+
+
+
+
+
+
 	/**
 	 * This function create a BGP4 Message with NodeNLRI field
 	 * @param addressList 
@@ -526,9 +633,6 @@ public class SendTopology implements Runnable {
 				pathAttributes.add(as_path);
 			}
 
-
-		
-
 			//NLRI
 			ITNodeNLRI itNodeNLRI = new ITNodeNLRI();
 			itNodeNLRI.setNodeId(domainID);
@@ -536,9 +640,17 @@ public class SendTopology implements Runnable {
 			itNodeNLRI.setCpu(itResources.getCpu());
 			itNodeNLRI.setMem(itResources.getMem());
 			itNodeNLRI.setStorage(itResources.getStorage());
+			/*itNodeNLRI.setSlices(itResources.getSlices());
+			if ( (itNodeNLRI.getSlices()!=null)&& (itNodeNLRI.getSlices().size()>0)){
+				for (int i=0; i< itNodeNLRI.getSlices().size();i++){
+					MapKeyValue temp= itNodeNLRI.getSlices().get(i);
+					log.info("Sending Slice with key "+temp.key+" and value "+temp.value);
+				}
+			}*/
 			update.setLearntFrom(itResources.getLearntFrom());
+
 			log.info("Creating IT Update related to domain "+domainID+" learnt from "+itResources.getLearntFrom());
-			LocalNodeDescriptorsTLV localNodeDescriptors = new LocalNodeDescriptorsTLV();
+			/*LocalNodeDescriptorsTLV localNodeDescriptors = new LocalNodeDescriptorsTLV();
 			
 			//Complete Dummy TLVs
 			BGPLSIdentifierNodeDescriptorSubTLV bGPLSIDSubTLV =new BGPLSIdentifierNodeDescriptorSubTLV();
@@ -547,7 +659,8 @@ public class SendTopology implements Runnable {
 			AreaIDNodeDescriptorSubTLV areaID = new AreaIDNodeDescriptorSubTLV();
 			areaID.setAREA_ID(this.localAreaID);
 			localNodeDescriptors.setAreaID(areaID);
-	
+			*/
+
 			//itNodeNLRI.setLocalNodeDescriptors(localNodeDescriptors);
 			BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
 			ra.setLsNLRI(itNodeNLRI);

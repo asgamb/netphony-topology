@@ -1,21 +1,15 @@
 package es.tid.tedb;
 
-import java.net.Inet4Address;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import es.tid.of.DataPathID;
+import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
-
-import es.tid.of.DataPathID;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
+import java.net.Inet4Address;
+import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Traffic Engineering Database of a Domain.
@@ -29,6 +23,7 @@ public class SimpleTEDB implements DomainTEDB{
 	private Inet4Address domainID;
 	
 	private IT_Resources itResources;
+	private Slices slices;
 
 	/**
 	 * List of algorithms that will be notified when there are significant changes in the TED
@@ -767,6 +762,15 @@ public class SimpleTEDB implements DomainTEDB{
 	public void setItResources(IT_Resources itResources) {
 		this.itResources = itResources;
 	}
-	
-	
+
+
+	public Slices getSlices() {
+		return slices;
+	}
+
+	public void setSlices(Slices elem) {
+		this.slices = elem;
+	}
+
+
 }

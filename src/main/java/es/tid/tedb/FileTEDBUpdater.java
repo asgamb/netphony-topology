@@ -2,6 +2,8 @@ package es.tid.tedb;
 
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.DefaultTEMetricLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.*;
+//import es.tid.bgp.bgp4Peer.peer.MapKeyValue;
+import es.tid.bgp.bgp4.update.fields.MapKeyValue;
 import es.tid.of.DataPathID;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumBandwidth;
@@ -42,7 +44,11 @@ public class FileTEDBUpdater {
 	 * Read a full network (no specific layer)
 	 * @param fileName Name of the XML file
 	 * @return Graph of the Network
+	 *
 	 */
+
+
+
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName){
 		return FileTEDBUpdater.readNetwork(fileName,null,false,0,Integer.MAX_VALUE);
 	}
@@ -1269,6 +1275,8 @@ public class FileTEDBUpdater {
 
 	public static Hashtable<String,TEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork, String learntFrom) {
 		Logger log = LoggerFactory.getLogger("BGP4Peer");
+		LinkedList<MapKeyValue> slicesList;
+		slicesList=	new LinkedList<MapKeyValue>();
 		Object router_id_addr = null;
 		Object s_router_id_addr = null;
 		Object d_router_id_addr = null;
@@ -1332,13 +1340,44 @@ public class FileTEDBUpdater {
 					}
 
 					NodeList itResourcesElement = element1.getElementsByTagName("it_resources");
+					log.info("Lenght IT resources= "+ String.valueOf(itResourcesElement.getLength()));
 					for (int i = 0; i < itResourcesElement.getLength(); i++) {
+						IT_Resources itResources = new IT_Resources();
+						Slices  slices = new Slices();
 						Element element = (Element) itResourcesElement.item(i);
-
 						NodeList itResourcesControllerITList = element.getElementsByTagName("controller_it");
 						Element itResourcesControllerITElement = (Element) itResourcesControllerITList.item(0);
 						String itResourcesControllerIT = getCharacterDataFromElement(itResourcesControllerITElement);
+						itResources.setControllerIT(itResourcesControllerIT);
+						itResources.setLearntFrom(learntFrom);
+						NodeList SlicesList = element.getElementsByTagName("slices");
+						//Element Slices =
+						//		SlicesList.getElementsByTagName("slices");
+						NodeList SliceList = element.getElementsByTagName("slice");
 
+						log.info("Number of slices= "+ String.valueOf(SliceList.getLength()));
+						for (int k = 0; k < SliceList.getLength(); k++) {
+							Node SliceNode = SliceList.item(k);
+							Element ee= (Element) SliceNode;
+							MapKeyValue kv=new MapKeyValue();
+							Element keyE= (Element) ee.getElementsByTagName("key").item(0);
+							Element valueE= (Element) ee.getElementsByTagName("value").item(0);
+							String key = getCharacterDataFromElement(keyE);
+							String value = getCharacterDataFromElement(valueE);
+							kv.key=key;
+							log.info("Key= "+ key);
+							kv.value=value;
+							log.info("Value= "+ value);
+							slicesList.add(kv);
+						}
+						if (SliceList.getLength()>0){
+							log.info("Salvato ");
+							slices.setSlices(slicesList);
+							slices.setLearntFrom(learntFrom);
+							slices.setdomainID(domain_id);
+							tedb.setSlices(slices);
+						}
+						//}
 						NodeList itResourcesCpuList = element.getElementsByTagName("cpu");
 						Element itResourcesCpuElement = (Element) itResourcesCpuList.item(0);
 						String itResourcesCpu = getCharacterDataFromElement(itResourcesCpuElement);
@@ -1351,11 +1390,6 @@ public class FileTEDBUpdater {
 						Element itResourcesStorageElement = (Element) itResourcesStorageList.item(0);
 						String itResourcesStorage = getCharacterDataFromElement(itResourcesStorageElement);
 
-						IT_Resources itResources = new IT_Resources();
-						if (itResourcesControllerIT!=null){
-							itResources.setControllerIT(itResourcesControllerIT);
-							itResources.setLearntFrom(learntFrom);
-						}
 						if (itResourcesCpu!=null) itResources.setCpu(itResourcesCpu);
 						if (itResourcesMem!=null) itResources.setMem(itResourcesMem);
 						if (itResourcesStorage!=null) {

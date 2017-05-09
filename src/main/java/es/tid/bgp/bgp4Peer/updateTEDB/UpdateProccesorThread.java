@@ -93,7 +93,7 @@ public class UpdateProccesorThread extends Thread {
 
 	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,
 			MultiDomainTEDB multiTedb ,Hashtable<String,TEDB> intraTEDBs ){
-		log=LoggerFactory.getLogger("BGP4Server");
+		log=LoggerFactory.getLogger("BGP4Peer");
 		running=true;
 		this.updateList=updateList;
 		this.multiTedb = multiTedb;
@@ -131,6 +131,7 @@ public class UpdateProccesorThread extends Thread {
 						att_ls = att;
 						break;
 					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_MP_REACH_NLRI:
+						log.debug("Received path attribute MP reach");
 						att_mpreach = att;
 						break;
 					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_ASPATH:
@@ -167,7 +168,9 @@ public class UpdateProccesorThread extends Thread {
 						case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_MP_REACH_NLRI:
 							int afi;
 							afi = ((MP_Reach_Attribute)att).getAddressFamilyIdentifier();
+							log.debug("AFI "+afi);
 							if (afi == AFICodes.AFI_BGP_LS){
+								log.debug("Here we are");
 								LinkStateNLRI nlri = (LinkStateNLRI) ((BGP_LS_MP_Reach_Attribute)att).getLsNLRI();
 								int nlriType =  nlri.getNLRIType();
 								switch (nlriType){					
@@ -181,15 +184,22 @@ public class UpdateProccesorThread extends Thread {
 									fillPrefixNLRI((PrefixNLRI)nlri, igpFlagBitsTLV, OSPFForwardingAddrTLV, prefixMetricTLV, routeTagTLV);
 									continue;
 								case NLRITypes.IT_Node_NLRI:
+									log.debug(updateMsg.toString());
+									log.debug("Received IT node NLRI");
 									fillITNodeInformation((ITNodeNLRI)(nlri), learntFrom);
 									continue;
+								case NLRITypes.Slice_NLRI:
+									log.debug("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaReceived Slice NLRI");
+									//log.info(updateMsg.toString());
+									fillSliceInformation((SliceNLRI)(nlri), learntFrom);
+									continue;
 								default:
-									log.debug("Attribute Code unknown");
+									log.info("DANGEROUS Attribute Code unknown");
 								}
 							}
 							continue;
 						default:
-							log.debug("Attribute Code unknown");
+							log.info("Path Attribute Code unknown");
 						}
 					}
 				}
@@ -698,13 +708,94 @@ public class UpdateProccesorThread extends Thread {
 		itResources.setStorage(itNodeNLRI.getStorage());
 		itResources.setLearntFrom(learntFrom);
 		itResources.setITdomainID(itNodeNLRI.getNodeId());
-
+		/*if ((itResources.getSlices()!=null)&&(itResources.getSlices().size()>0)){
+			itResources.setSlices(itNodeNLRI.getSlices());
+			for (int i=0; i< itResources.getSlices().size();i++){
+				MapKeyValue temp= itResources.getSlices().get(i);
+				log.info("Received Slice with key "+temp.key+" and value "+temp.value);
+			}
+		}*/
 		simpleTEDB.setItResources(itResources);
 
 
 
 
 	}
+
+
+
+	private void fillSliceInformation(SliceNLRI SNodeNLRI, String learntFrom){
+/*		try {
+			Thread.sleep(2000);                 //1000 milliseconds is one second.
+		} catch(InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+	*/	DomainTEDB domainTEDB= null;
+
+		domainTEDB=(DomainTEDB)intraTEDBs.get(SNodeNLRI.getNodeId());
+		SimpleTEDB simpleTEDB=null;
+		if (domainTEDB instanceof SimpleTEDB){
+			simpleTEDB = (SimpleTEDB) domainTEDB;
+		}else if (domainTEDB==null){
+			simpleTEDB = new SimpleTEDB();
+			simpleTEDB.createGraph();
+
+
+			try {
+				simpleTEDB.setDomainID((Inet4Address) InetAddress.getByName(SNodeNLRI.getNodeId()));
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			this.intraTEDBs.put(SNodeNLRI.getNodeId(), simpleTEDB);
+
+		}
+		else {
+			log.error("PROBLEM: TEDB not compatible");
+			return;
+		}
+
+		MapKeyValue elem = new MapKeyValue();
+		elem.setKey(SNodeNLRI.getKey());
+		elem.setValue(SNodeNLRI.getValue());
+		log.info("Received Slice with key "+elem.key+" and value "+elem.value);
+
+		if(simpleTEDB.getSlices()==null){
+			Slices slices = new Slices();
+			slices.setLearntFrom(learntFrom);
+			slices.setdomainID(SNodeNLRI.getNodeId());
+			LinkedList<MapKeyValue> slicesList;
+			slicesList=	new LinkedList<MapKeyValue>();
+			slicesList.add(elem);
+			slices.setSlices(slicesList);
+			simpleTEDB.setSlices(slices);
+		}
+		else{
+			boolean found=false;
+			if (simpleTEDB.getSlices().getSlices().size()==0){
+				simpleTEDB.getSlices().getSlices().add(elem);
+			}
+			else{
+				log.debug("Size greater than 0");
+				log.debug("list before");
+				log.debug(simpleTEDB.getSlices().toString());
+				for(int i=0; i< simpleTEDB.getSlices().getSlices().size();i++) {
+					MapKeyValue temp = simpleTEDB.getSlices().getSlices().get(i);
+					if ((temp.getKey().equals(elem.getKey()))&&(temp.getValue().equals(elem.getValue()))){
+						found = true;
+						log.debug("Already present, nothing to do");
+						break;
+					}
+				}
+				if (found==false){
+					simpleTEDB.getSlices().getSlices().add(elem);
+
+				}
+			}
+		}
+		log.info(simpleTEDB.getSlices().toString());
+	}
+
+
 
 	private void fillNodeInformation(NodeNLRI nodeNLRI, String learntFrom){
 

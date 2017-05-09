@@ -1,12 +1,12 @@
 package es.tid.tedb;
 
 
+import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
+
 import java.net.Inet4Address;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Set;
-
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 
 
 public interface DomainTEDB extends TEDB {
@@ -64,9 +64,11 @@ public interface DomainTEDB extends TEDB {
 
 	public IT_Resources getItResources();
 	public void setItResources(IT_Resources itResources);
-	
+
+	public Slices getSlices();
+	public void setSlices(Slices slices);
 
 
-	
+
 
 }

@@ -1,5 +1,6 @@
 package es.tid.topologyModuleBase.UnifyTopoModel.model;
 
+import es.tid.bgp.bgp4.update.fields.MapKeyValue;
 import es.tid.tedb.*;
 
 import java.net.Inet4Address;
@@ -52,14 +53,27 @@ public class TranslateModel {
 			  resources.setMem(ted.getItResources().getMem());
 			  resources.setStorage(ted.getItResources().getStorage());
 			  node.setResources(resources);
-			  Metadata metadata = new Metadata();
-			  MetadataMetadata e= new MetadataMetadata();
-			  e.setKey("unify-slor");
-			  e.setValue(ted.getItResources().getControllerIT());
-			  metadata.getMetadata().add(e);
-			  node.metadata.add(e);
+			  //Metadata metadata = new Metadata();
+			  //MetadataMetadata e= new MetadataMetadata();
+			  //e.setKey("unify-slor");
+			  //e.setValue(ted.getItResources().getControllerIT());
+			  //metadata.getMetadata().add(e);
+			  //node.metadata.add(e);
 		  }
-				  
+		  if (ted.getSlices()!=null){
+			Metadata metadata = new Metadata();
+			for (int h=0;h< ted.getSlices().getSlices().size();h++){
+				MapKeyValue temp= ted.getSlices().getSlices().get(h);
+				MetadataMetadata e = new MetadataMetadata();
+				e.setKey(temp.getKey());
+				e.setValue(temp.getValue());
+				metadata.getMetadata().add(e);
+				node.metadata.add(e);
+
+
+			}
+			  node.setMetadata(metadata.getMetadata());
+		  }
 		  ports.setPort(portlist);
 		  node.setPorts(ports);
 		  
