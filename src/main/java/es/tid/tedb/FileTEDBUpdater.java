@@ -1572,7 +1572,7 @@ public class FileTEDBUpdater {
 							IntraDomainEdge edge = new IntraDomainEdge();
 							NodeList source = element.getElementsByTagName("source");
 							Element source_router_el = (Element) source.item(0);
-							edge.setLearntFrom(learntFrom);
+							edge.setLearntFrom("local");
 							NodeList source_router_id = source_router_el.getElementsByTagName("router_id");
 							Element source_router_id_el = (Element) source_router_id.item(0);
 							String s_r_id = getCharacterDataFromElement(source_router_id_el);
@@ -1772,7 +1772,7 @@ public class FileTEDBUpdater {
 							InterDomainEdge edge = new InterDomainEdge();
 							TE_Information tE_info=readTE_INFOfromXml(tE_info_common,element, false,numLabels, grid,  cs, n, 0, Integer.MAX_VALUE);
 							edge.setTE_info(tE_info);
-							edge.setLearntFrom(learntFrom);
+							edge.setLearntFrom("local");
 							NodeList source = element.getElementsByTagName("source");
 							Element source_router_el = (Element) source.item(0);
 							NodeList source_router_id = source_router_el
