@@ -1375,15 +1375,16 @@ public class FileTEDBUpdater {
 							log.info("Value= "+ value);
 							slicesList.add(kv);
 						}
-						if (SliceList.getLength()>0){
+						if (slicesList.size()>0){
 							log.info("Salvato ");
 							slices.setSlices(slicesList);
 							slices.setLearntFrom(learntFrom);
 							slices.setdomainID(domain_id);
 							tedb.setSlices(slices);
 						}
-						log.info("slice view after reading: "+tedb.getSlices().toString());
-
+						if (slicesList.size()>0) {
+							log.info("slice view after reading: " + tedb.getSlices().toString());
+						}
 						//}
 						NodeList itResourcesCpuList = element.getElementsByTagName("cpu");
 						Element itResourcesCpuElement = (Element) itResourcesCpuList.item(0);
