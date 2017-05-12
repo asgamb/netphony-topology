@@ -412,9 +412,12 @@ public class SendTopology implements Runnable {
 								//log.info(update.getLearntFrom().substring(1));
 								if (!destination.equals(update.getLearntFrom().substring(1))) {
 									//log.info("id da getLearnt "+ update.getLearntFrom());
-									log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom().substring(1));
+									log.info("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom().substring(1));
 									log.debug("Sending BGP4 update to:" + destination);
 									session.sendBGP4Message(update);
+									if (update.getNlri() instanceof SliceNLRI){
+										log.info("Sending Slice update to destination " + destination);
+									}
 
 								} else
 									log.debug("destination " + destination + " and source of information " + update.getLearntFrom().substring(1) + " are equal");
