@@ -1278,7 +1278,7 @@ public class FileTEDBUpdater {
 
 
 	//temp
-	public static Hashtable<String,TEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork, String learntFrom) {
+	public static Hashtable<String,TEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork, String param) {
 		Logger log = LoggerFactory.getLogger("BGP4Peer");
 		LinkedList<MapKeyValue> slicesList;
 		slicesList=	new LinkedList<MapKeyValue>();
@@ -1287,7 +1287,7 @@ public class FileTEDBUpdater {
 		Object d_router_id_addr = null;
 		Object src_Numif_id = null;
 		Object dst_Numif_id = null;
-		log.info("Identifier for saving local resources "+ learntFrom);
+		log.info("Identifier for saving local resources "+ param);
 
 		Hashtable<String,TEDB> TEDBs = new Hashtable<String,TEDB>();
 
@@ -1354,7 +1354,7 @@ public class FileTEDBUpdater {
 						Element itResourcesControllerITElement = (Element) itResourcesControllerITList.item(0);
 						String itResourcesControllerIT = getCharacterDataFromElement(itResourcesControllerITElement);
 						itResources.setControllerIT(itResourcesControllerIT);
-						itResources.setLearntFrom(learntFrom);
+						itResources.setLearntFrom("local");
 						NodeList SlicesList = element.getElementsByTagName("slices");
 						//Element Slices =
 						//		SlicesList.getElementsByTagName("slices");
@@ -1378,7 +1378,7 @@ public class FileTEDBUpdater {
 						if (slicesList.size()>0){
 							log.info("Salvato ");
 							slices.setSlices(slicesList);
-							slices.setLearntFrom(learntFrom);
+							slices.setLearntFrom("local");
 							slices.setdomainID(domain_id);
 							tedb.setSlices(slices);
 						}
