@@ -1287,7 +1287,7 @@ public class FileTEDBUpdater {
 		Object d_router_id_addr = null;
 		Object src_Numif_id = null;
 		Object dst_Numif_id = null;
-
+		log.info("Identifier for saving local resources "+ learntFrom);
 
 		Hashtable<String,TEDB> TEDBs = new Hashtable<String,TEDB>();
 
@@ -1382,6 +1382,8 @@ public class FileTEDBUpdater {
 							slices.setdomainID(domain_id);
 							tedb.setSlices(slices);
 						}
+						log.info("slice view after reading: "+tedb.getSlices().toString());
+
 						//}
 						NodeList itResourcesCpuList = element.getElementsByTagName("cpu");
 						Element itResourcesCpuElement = (Element) itResourcesCpuList.item(0);

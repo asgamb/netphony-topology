@@ -44,12 +44,12 @@ public class Slices {
 
 	public String toString(){
 		String ret="";
-		ret=ret+"lernt from: "+learntFrom;
-		ret=ret+"domain: "+domainID;
+		ret=ret+"\nlearnt from: "+learntFrom+" \n";
+		ret=ret+"domain: "+domainID+" \n";
 		for(int i=0; i< slicesList.size();i++) {
 			MapKeyValue temp = slicesList.get(i);
 			ret=ret+"key: "+temp.getKey();
-			ret=ret+"value: "+temp.getValue();
+			ret=ret+"value: "+temp.getValue()+" \n";
 
 		}
 		
