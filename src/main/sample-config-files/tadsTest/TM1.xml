@@ -5,7 +5,7 @@
 
     <XML_Plugin>
         <mode>TM</mode>
-        <XMLFileTopology>target/demoTests/network1.xml</XMLFileTopology>
+        <XMLFileTopology>target/tadsTest/network1.xml</XMLFileTopology>
         <Identifier>10.19.200.204</Identifier>>
     </XML_Plugin>
      <InitFrom>
@@ -21,7 +21,7 @@
     <BGPLS>
         <Reader>True</Reader>
         <Writer>True</Writer>
-        <BGPLSconfigFile>target/demoTests/BGPLS1.xml</BGPLSconfigFile>
+        <BGPLSconfigFile>target/tadsTest/BGPLS1.xml</BGPLSconfigFile>
     </BGPLS>
    
 </config>

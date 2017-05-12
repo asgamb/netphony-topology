@@ -138,7 +138,7 @@ public class SendTopology implements Runnable {
 								sendITNodeNLRI( domainID, ((DomainTEDB)ted).getItResources());
 							}
 							if (((DomainTEDB)ted).getSlices()!=null){
-								log.info("Qui ok ");
+								log.debug("Qui ok ");
 								sendSliceNLRI(domainID, ((DomainTEDB)ted).getSlices());
 							}
 
@@ -572,8 +572,9 @@ public class SendTopology implements Runnable {
 			SliceNLRI.setNodeId(domainID);
 			SliceNLRI.setKey(element.getKey());
 			SliceNLRI.setValue(element.getValue());
-
 			update.setLearntFrom(slice.getLearntFrom());
+
+			log.info("local slice view"+slice.toString());
 
 			log.info("Creating Slice Update related to domain "+domainID+" with key= "+SliceNLRI.getKey()+" and value="+SliceNLRI.getValue());
 

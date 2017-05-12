@@ -181,7 +181,8 @@ public class BGPPeer {
 			//multiDomainTEDB = new MDTEDB();
 			//intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false);
 			logParser.info("BGPIdentifier: "+params.getBGPIdentifier());
-			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false, params.getBGPIdentifier());
+			//intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false, params.getBGPIdentifier());
+			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false, "local");
 
 			//multiDomainTEDB.initializeFromFile(params.getTopologyFile());
 			multiDomainTEDB.initializeFromFile(params.getTopologyFile(), params.getBGPIdentifier());

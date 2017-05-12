@@ -739,7 +739,7 @@ public class UpdateProccesorThread extends Thread {
 		}else if (domainTEDB==null){
 			simpleTEDB = new SimpleTEDB();
 			simpleTEDB.createGraph();
-
+			log.info("not present, we need to create intra tedb with id "+SNodeNLRI.getNodeId());
 
 			try {
 				simpleTEDB.setDomainID((Inet4Address) InetAddress.getByName(SNodeNLRI.getNodeId()));
@@ -772,6 +772,7 @@ public class UpdateProccesorThread extends Thread {
 		else{
 			boolean found=false;
 			if (simpleTEDB.getSlices().getSlices().size()==0){
+				log.info("Slice dict already created simply add SLice with key "+elem.key+" and value "+elem.value);
 				simpleTEDB.getSlices().getSlices().add(elem);
 			}
 			else{

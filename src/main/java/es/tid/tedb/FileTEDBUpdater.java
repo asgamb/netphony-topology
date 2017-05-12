@@ -1273,6 +1273,11 @@ public class FileTEDBUpdater {
 		return TEDBs;
 	}
 
+
+
+
+
+	//temp
 	public static Hashtable<String,TEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork, String learntFrom) {
 		Logger log = LoggerFactory.getLogger("BGP4Peer");
 		LinkedList<MapKeyValue> slicesList;
