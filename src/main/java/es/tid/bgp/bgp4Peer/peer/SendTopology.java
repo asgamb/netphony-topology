@@ -205,10 +205,11 @@ public class SendTopology implements Runnable {
 		//Andrea
 
 		if ( (slice.getSlices()!=null)&& (slice.getSlices().size()>0)){
+			log.info(" Slice number= "+slice.getSlices().size());
 			for (int i=0; i< slice.getSlices().size();i++){
 				MapKeyValue temp= slice.getSlices().get(i);
 				//log.info("Sending Slices with key "+temp.key+" and value "+temp.value);
-				log.info("Sending Slice ");
+				log.info("Sending Slice number "+ String.valueOf(i));
 				BGP4Update update = createMsgUpdateSliceNLRI(domainID, temp, slice);
 				sendMessage(update);
 
