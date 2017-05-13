@@ -185,7 +185,7 @@ public class UpdateProccesorThread extends Thread {
 									continue;
 								case NLRITypes.IT_Node_NLRI:
 									log.debug(updateMsg.toString());
-									log.debug("Received IT node NLRI");
+									log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaReceived IT node NLRI");
 									fillITNodeInformation((ITNodeNLRI)(nlri), learntFrom);
 									continue;
 								case NLRITypes.Slice_NLRI:
@@ -700,7 +700,7 @@ public class UpdateProccesorThread extends Thread {
 			return;
 		}
 
-		log.info("Received IT info for domain "+itNodeNLRI.getNodeId()+" from peer "+learntFrom);
+		log.debug("Received IT info for domain "+itNodeNLRI.getNodeId()+" from peer "+learntFrom);
 		IT_Resources itResources = new IT_Resources();
 		itResources.setControllerIT(itNodeNLRI.getControllerIT());
 		itResources.setCpu(itNodeNLRI.getCpu());
@@ -757,9 +757,10 @@ public class UpdateProccesorThread extends Thread {
 		MapKeyValue elem = new MapKeyValue();
 		elem.setKey(SNodeNLRI.getKey());
 		elem.setValue(SNodeNLRI.getValue());
-		log.info("Received Slice with key "+elem.key+" and value "+elem.value);
+		log.debug("Received Slice with key "+elem.key+" and value "+elem.value);
 
 		if(simpleTEDB.getSlices()==null){
+			log.info("slices in ted are null");
 			Slices slices = new Slices();
 			slices.setLearntFrom(learntFrom);
 			slices.setdomainID(SNodeNLRI.getNodeId());
@@ -770,6 +771,7 @@ public class UpdateProccesorThread extends Thread {
 			simpleTEDB.setSlices(slices);
 		}
 		else{
+			log.info("slices present in ted");
 			boolean found=false;
 			if (simpleTEDB.getSlices().getSlices().size()==0){
 				log.info("Slice dict already created simply add SLice with key "+elem.key+" and value "+elem.value);
@@ -777,8 +779,8 @@ public class UpdateProccesorThread extends Thread {
 			}
 			else{
 				log.debug("Size greater than 0");
-				log.debug("list before");
-				log.debug(simpleTEDB.getSlices().toString());
+				//log.debug("list before");
+				//log.debug(simpleTEDB.getSlices().toString());
 				for(int i=0; i< simpleTEDB.getSlices().getSlices().size();i++) {
 					MapKeyValue temp = simpleTEDB.getSlices().getSlices().get(i);
 					if ((temp.getKey().equals(elem.getKey()))&&(temp.getValue().equals(elem.getValue()))){

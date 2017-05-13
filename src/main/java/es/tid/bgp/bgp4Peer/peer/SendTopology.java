@@ -207,7 +207,8 @@ public class SendTopology implements Runnable {
 		if ( (slice.getSlices()!=null)&& (slice.getSlices().size()>0)){
 			for (int i=0; i< slice.getSlices().size();i++){
 				MapKeyValue temp= slice.getSlices().get(i);
-				log.info("Sending Slice with key "+temp.key+" and value "+temp.value);
+				//log.info("Sending Slices with key "+temp.key+" and value "+temp.value);
+				log.info("Sending Slice ");
 				BGP4Update update = createMsgUpdateSliceNLRI(domainID, temp, slice);
 				sendMessage(update);
 
@@ -411,13 +412,14 @@ public class SendTopology implements Runnable {
 							if ((update.getLearntFrom() != null) && (update.getLearntFrom().contains("/"))) {
 								//log.info(update.getLearntFrom().substring(1));
 								if (!destination.equals(update.getLearntFrom().substring(1))) {
-									//log.info("id da getLearnt "+ update.getLearntFrom());
-									log.info("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom().substring(1));
-									log.debug("Sending BGP4 update to:" + destination);
-									session.sendBGP4Message(update);
+									log.info("id da getLearnt "+ update.getLearntFrom());
+									log.info("Case1");
 									if (update.getNlri() instanceof SliceNLRI){
 										log.info("Sending Slice update to destination " + destination);
+										log.info("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom().substring(1));
 									}
+									log.debug("Sending BGP4 update to:" + destination);
+									session.sendBGP4Message(update);
 
 								} else
 									log.debug("destination " + destination + " and source of information " + update.getLearntFrom().substring(1) + " are equal");
@@ -426,8 +428,13 @@ public class SendTopology implements Runnable {
 							}
 							else{
 								if (!destination.equals(update.getLearntFrom())) {
-									//log.info("id da getLearnt "+ update.getLearntFrom());
-									log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom());
+									log.info("id da getLearnt "+ update.getLearntFrom());
+									log.info("Case2");
+									if (update.getNlri() instanceof SliceNLRI){
+										log.info("Sending Slice update to destination " + destination);
+										log.info("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom());
+									}
+									//log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom());
 									log.debug("Sending BGP4 update to:" + destination);
 									session.sendBGP4Message(update);
 								} else
@@ -570,6 +577,7 @@ public class SendTopology implements Runnable {
 				pathAttributes.add(as_path);
 			}
 
+			log.info("Creating Slice Update ");
 			//NLRI
 			SliceNLRI SliceNLRI = new SliceNLRI();
 			SliceNLRI.setNodeId(domainID);
@@ -579,7 +587,8 @@ public class SendTopology implements Runnable {
 
 			log.info("Current local slice view: "+slice.toString());
 
-			log.info("Creating Slice Update related to domain "+domainID+" with key= "+SliceNLRI.getKey()+" and value="+SliceNLRI.getValue());
+			//log.info("Creating Slice Update related to domain "+domainID+" with key= "+SliceNLRI.getKey()+" and value="+SliceNLRI.getValue());
+
 
 			//itNodeNLRI.setLocalNodeDescriptors(localNodeDescriptors);
 			BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
