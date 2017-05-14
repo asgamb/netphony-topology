@@ -191,7 +191,7 @@ public class UpdateProccesorThread extends Thread {
 								case NLRITypes.Slice_NLRI:
 									log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaReceived Slice NLRI");
 									//log.info(updateMsg.toString());
-									fillSliceInformation((SliceNLRI)(nlri), learntFrom);
+									//fillSliceInformation((SliceNLRI)(nlri), learntFrom);
 									continue;
 								default:
 									log.info("DANGEROUS Attribute Code unknown");
