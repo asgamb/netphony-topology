@@ -136,8 +136,8 @@ public class BGP4SessionClient extends GenericBGP4Session{
 							log.info("added to dispatcher");
 							BGP4Update bgp4Update = new BGP4Update(msg);
 							log.debug(bgp4Update.toString());
-							//bgp4Update.setLearntFrom(this.remotePeerIP.getHostAddress() );
-							bgp4Update.setLearntFrom(this.getRemotePeerIP().toString());
+							bgp4Update.setLearntFrom(this.remotePeerIP.getHostAddress() );
+							//bgp4Update.setLearntFrom(this.getRemotePeerIP().toString());
 							updateDispatcher.dispatchRequests(bgp4Update);
 						}
 						else

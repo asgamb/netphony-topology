@@ -131,7 +131,8 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 						log.debug("UPDATE message from "+this.remotePeerIP);
 						BGP4Update bgp4Update = new BGP4Update(msg);
 						log.debug(bgp4Update.toString());
-						bgp4Update.setLearntFrom(this.getRemotePeerIP().toString());
+						//bgp4Update.setLearntFrom(this.getRemotePeerIP().toString());
+						bgp4Update.setLearntFrom(this.remotePeerIP.getHostAddress() );
 						updateDispatcher.dispatchRequests(bgp4Update);
 						break;
 
