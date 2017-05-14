@@ -413,11 +413,11 @@ public class SendTopology implements Runnable {
 							if ((update.getLearntFrom() != null) && (update.getLearntFrom().contains("/"))) {
 								//log.info(update.getLearntFrom().substring(1));
 								if (!destination.equals(update.getLearntFrom().substring(1))) {
-									log.info("id da getLearnt "+ update.getLearntFrom());
-									log.info("Case1");
+									log.debug("id da getLearnt "+ update.getLearntFrom());
+									log.debug("Case1");
 									if (update.getNlri() instanceof SliceNLRI){
-										log.info("Sending Slice update to destination " + destination);
-										log.info("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom().substring(1));
+										log.debug("Sending Slice update to destination " + destination);
+										log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom().substring(1));
 									}
 									log.debug("Sending BGP4 update to:" + destination);
 									session.sendBGP4Message(update);
@@ -429,11 +429,11 @@ public class SendTopology implements Runnable {
 							}
 							else{
 								if (!destination.equals(update.getLearntFrom())) {
-									log.info("id da getLearnt "+ update.getLearntFrom());
-									log.info("Case2");
+									log.debug("id da getLearnt "+ update.getLearntFrom());
+									log.debug("Case2");
 									if (update.getNlri() instanceof SliceNLRI){
-										log.info("Sending Slice update to destination " + destination);
-										log.info("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom());
+										log.debug("Sending Slice update to destination " + destination);
+										log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom());
 									}
 									//log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom());
 									log.debug("Sending BGP4 update to:" + destination);
