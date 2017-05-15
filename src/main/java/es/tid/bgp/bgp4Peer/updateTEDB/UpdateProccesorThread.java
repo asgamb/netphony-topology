@@ -115,7 +115,7 @@ public class UpdateProccesorThread extends Thread {
 				PathAttribute att_mpreach  = null; 
 				PathAttribute att = null;
 				updateMsg= updateList.take();
-				log.debug("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());
+				log.debug("Update Processor Thread Reading the message: \n"+ updateMsg.toString());
 				//Andrea To be checked
 				String learntFrom = updateMsg.getLearntFrom();
 				log.debug("Received from "+learntFrom);
@@ -129,10 +129,12 @@ public class UpdateProccesorThread extends Thread {
 					switch (typeCode){
 					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_BGP_LS_ATTRIBUTE:
 						att_ls = att;
+						pathAttributeListUtil.add(att_ls);
 						break;
 					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_MP_REACH_NLRI:
 						log.debug("Received path attribute MP reach");
 						att_mpreach = att;
+						pathAttributeListUtil.add(att_mpreach);
 						break;
 					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_ASPATH:
 						//log.info("We don't use ASPATH");
@@ -148,10 +150,10 @@ public class UpdateProccesorThread extends Thread {
 				}	
 
 				//los situamos en el orden correcto para nuestra beloved ted...
-				if(att_ls!=null)
-					pathAttributeListUtil.add(att_ls);
-				if(att_mpreach!=null)
-					pathAttributeListUtil.add(att_mpreach);
+				//if(att_ls!=null)
+				//	pathAttributeListUtil.add(att_ls);
+				//if(att_mpreach!=null)
+				//	pathAttributeListUtil.add(att_mpreach);
 
 				if (pathAttributeListUtil != null){
 					for (int i=0;i<pathAttributeListUtil.size();i++){
