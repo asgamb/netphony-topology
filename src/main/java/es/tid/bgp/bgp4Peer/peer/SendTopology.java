@@ -586,7 +586,7 @@ public class SendTopology implements Runnable {
 			SliceNLRI.setValue(element.getValue());
 			update.setLearntFrom(slice.getLearntFrom());
 
-			log.info("Current local slice view: "+slice.toString());
+			//log.info("Current local slice view: "+slice.toString());
 
 			//log.info("Creating Slice Update related to domain "+domainID+" with key= "+SliceNLRI.getKey()+" and value="+SliceNLRI.getValue());
 
