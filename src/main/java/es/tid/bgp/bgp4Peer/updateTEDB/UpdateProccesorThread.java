@@ -107,18 +107,27 @@ public class UpdateProccesorThread extends Thread {
 	 * Starts processing updates
 	 */
 	public void run(){	
-		BGP4Update updateMsg;
+		BGP4Update updateMsg=null;
 		while (running) {
-			try {
+			//try {
 				clearAttributes();
 				PathAttribute att_ls = null;
 				PathAttribute att_mpreach  = null; 
 				PathAttribute att = null;
-				updateMsg= updateList.take();
-				log.debug("Update Processor Thread Reading the message: \n"+ updateMsg.toString());
+			    String learntFrom = "";
+			try {
+					updateMsg= updateList.take();
+					log.debug("Update Processor Thread Reading the message: \n"+ updateMsg.toString());
+					learntFrom = updateMsg.getLearntFrom();
+			} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+					log.warn("Sono finito qui "+e);
+					continue;
+				}
 				//Andrea To be checked
-				String learntFrom = updateMsg.getLearntFrom();
 				log.debug("Received from "+learntFrom);
+				//if (updateMsg!=null){
 				ArrayList<PathAttribute> pathAttributeList = updateMsg.getPathAttributes();
 				ArrayList<PathAttribute> pathAttributeListUtil = new ArrayList<PathAttribute>();			
 
@@ -208,10 +217,11 @@ public class UpdateProccesorThread extends Thread {
 
 
 
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			//} catch (InterruptedException e) {
+			//		// TODO Auto-generated catch block
+			//		//e.printStackTrace();
+			//		log.warn("Sono finito qui "+e);
+			//}
 		}
 	}
 
