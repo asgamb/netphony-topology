@@ -42,6 +42,11 @@ public class Slices {
 		this.domainID = ID;
 	}
 
+	public void addSlice(MapKeyValue elem) {
+		slicesList.add(elem);
+	}
+
+
 	public String toString(){
 		String ret="";
 		ret=ret+"\nlearnt from: "+learntFrom+" \n";
