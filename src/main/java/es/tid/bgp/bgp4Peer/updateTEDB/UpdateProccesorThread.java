@@ -186,7 +186,7 @@ public class UpdateProccesorThread extends Thread {
 								case NLRITypes.IT_Node_NLRI:
 									log.debug(updateMsg.toString());
 									log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaReceived IT node NLRI");
-									fillITNodeInformation((ITNodeNLRI)(nlri), learntFrom);
+									//fillITNodeInformation((ITNodeNLRI)(nlri), learntFrom);
 									continue;
 								case NLRITypes.Slice_NLRI:
 									log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaReceived Slice NLRI");
