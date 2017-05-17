@@ -20,6 +20,7 @@ public class BGPPeerMain {
 		bgpPeer.startServer();
 		bgpPeer.startSaveTopology();
 		bgpPeer.startManagementServer();
+		bgpPeer.startSlice();
 		bgpPeer.startSendTopology();
 	
 

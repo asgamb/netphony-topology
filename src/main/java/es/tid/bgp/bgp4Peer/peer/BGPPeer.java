@@ -3,6 +3,7 @@ package es.tid.bgp.bgp4Peer.peer;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
 import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
+import es.tid.bgp.bgp4Peer.updateTEDB.UpdateSlices;
 import es.tid.tedb.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,8 @@ public class BGPPeer {
 	private boolean saveTopology;
 	
 	private SaveTopologyinDB saveTopologyDB;
-	
+	private UpdateSlices sliceUpdater;
+
 	/**
 	 * 
 	 */
@@ -200,9 +202,13 @@ public class BGPPeer {
 		}
 		//Create the task to send the topology. It has to be created because you can start sending the topology in the management (wirting): send topology on.
 		sendTopologyTask = new SendTopology();
+		sliceUpdater= new UpdateSlices();
 		saveTopologyDB= new SaveTopologyinDB();
 		if (params.isSaveTopologyDB() == true){
 			saveTopologyDB.configure(intraTEDBs, multiDomainTEDB, params.isSaveTopologyDB(), params.getTopologyDBIP().getHostAddress(), params.getTopologyDBport());
+		}
+		if (params.isSlice() == true){
+			sliceUpdater.configure(params.getSlicePath(), params.getSliceIP(), params.getSlicePort(), params.getSliceDomain(), intraTEDBs);
 		}
 
 	}
@@ -311,7 +317,16 @@ public class BGPPeer {
 			System.exit(1);
 		}
 	}
-	
+
+	public void startSlice(){
+		//if (params.isSlice()) {
+		//	sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
+		//}
+		executor.scheduleWithFixedDelay(sliceUpdater, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
+	}
+
+
+
 	public void startSendTopology(){
 		if (params.isTest()) {
 			sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
@@ -321,8 +336,7 @@ public class BGPPeer {
 		}
 		executor.scheduleWithFixedDelay(sendTopologyTask, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
 	}
-	
-	
+
 	
 	public void startSaveTopology(){
 		//FIXME: ADD param to configure the delay

@@ -86,6 +86,10 @@ public class BGP4Parameters {
 	 */
 
 	private boolean isTest=false;
+	private String slicePath;
+	private int slicePort;
+	private String sliceIP;
+	private String sliceDomain;
 
 	/**
 	 * Time between sending keepalives
@@ -137,7 +141,7 @@ public class BGP4Parameters {
 	private boolean sendIntradomainLinks=false;
 	
 
-
+	private Boolean isSlices=false;
 	/**
 	 * Instance identifier for NodeNLRI (Types defined in class InstanceIDTypes)
 	 */
@@ -182,6 +186,7 @@ public class BGP4Parameters {
 				boolean peerPort = false;
 				BGP4LSPeerInfo peerInfo=null;
 
+
 				String tempVal;
 
 				public void startElement(String uri, String localName,
@@ -202,6 +207,20 @@ public class BGP4Parameters {
 					}else if (qName.equalsIgnoreCase("peerPort")){
 						peerPort = true;
 					}
+					/*else if (qName.equalsIgnoreCase("sliceLoad")){
+						log.info("Found slice configuration");
+					}
+					else if (qName.equalsIgnoreCase("sliceIP")){
+						send = true;
+					}
+					else if (qName.equalsIgnoreCase("sliceport")){
+						receive = true;
+					}else if (qName.equalsIgnoreCase("slicepath")){
+						peerPort = true;
+					}
+					else if (qName.equalsIgnoreCase("slicedomain")){
+						peerPort = true;
+					}*/
 						
 				}
 
@@ -303,6 +322,27 @@ public class BGP4Parameters {
 					else if (qName.equalsIgnoreCase("localBGPPort")){
 						localBGPPort = Integer.parseInt(tempVal.trim());
 					}
+					else if (qName.equalsIgnoreCase("sliceLoad")){
+						log.info("Found slice configuration");
+					}
+					else if (qName.equalsIgnoreCase("sliceIP")){
+						isSlices=true;
+						sliceIP = tempVal.trim();
+						log.info("Slice IP="+sliceIP);
+					}
+					else if (qName.equalsIgnoreCase("sliceport")){
+						slicePort = Integer.parseInt(tempVal.trim());
+						log.info("Slice port="+String.valueOf(slicePort));
+					}
+					else if (qName.equalsIgnoreCase("slicepath")){
+						slicePath = tempVal.trim();
+						log.info("Slice Path="+String.valueOf(slicePath));
+					}
+					else if (qName.equalsIgnoreCase("slicedomain")){
+						sliceDomain = tempVal.trim();
+						log.info("Slice domain="+String.valueOf(sliceDomain));
+					}
+
 //					else if (qName.equalsIgnoreCase("configPeer")){
 //						log.info("peers....." + peersToConnect.toString());
 //					}
@@ -381,6 +421,12 @@ public class BGP4Parameters {
 	}
 	public void setisTest(boolean test) {
 		this.isTest = test;
+	}
+	public boolean isSlice() {
+		return isSlices;
+	}
+	public void setisSlice(boolean test) {
+		this.isSlices = test;
 	}
 
 	public String getConfFile() {
@@ -519,9 +565,33 @@ public class BGP4Parameters {
 	public void setTopologyDBport(int topologyDBport) {
 		this.topologyDBport = topologyDBport;
 	}
-	
-	
-	
-	
-	
+
+	public int getSlicePort() {
+		return slicePort;
+	}
+	public void setSlicePort(int port) {
+		this.slicePort = port;
+	}
+
+	public String getSlicePath() {
+		return slicePath;
+	}
+	public void setSlicePath(String path) {
+		this.slicePath = path;
+	}
+	public String getSliceIP() {
+		return sliceIP;
+	}
+	public void setSliceIP(String IP) {
+		this.sliceIP = IP;
+	}
+	public String getSliceDomain() {
+		return sliceDomain;
+	}
+	public void setSliceDomain(String domain) {
+		this.sliceDomain = domain;
+	}
+
+
+
 }

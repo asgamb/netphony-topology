@@ -12,7 +12,7 @@
 
 		<it_resources>
 			<controller_it>https://openstack4.5Gex.com/url</controller_it>
-			<slices>
+			<!--slices>
 				<slice>
 					<key>2sl-or1</key>
 					<value>2https://openstack1.5Gex.com/url</value>
@@ -25,7 +25,7 @@
 					<key>2sl-or3</key>
 					<value>2https://openstack3.5Gex.com/url</value>
 				</slice>
-			</slices>
+			</slices-->
 			<cpu>200</cpu>
 			<mem>200GByte</mem>
 			<storage>200TByte</storage>
