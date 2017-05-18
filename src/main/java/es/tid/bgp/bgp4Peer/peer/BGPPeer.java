@@ -155,7 +155,7 @@ public class BGPPeer {
 //		FileHandler fh2;
 //		try {
 //			fh=new FileHandler(params.getBGP4LogFile());
-			logParser=LoggerFactory.getLogger("BGP4Peer");
+			logParser=LoggerFactory.getLogger("BGP4Parser");
 //			logParser.addHandler(fh);
 //			logParser.setLevel(Level.ALL);
 //			fh1=new FileHandler(params.getBGP4LogFileClient());
