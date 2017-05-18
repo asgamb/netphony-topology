@@ -131,9 +131,9 @@ public class BGP4SessionClient extends GenericBGP4Session{
 						break;
 
 					case BGP4MessageTypes.MESSAGE_UPDATE:
-						log.info("BGP UPDATE message received from "+this.remotePeerIP);
+						log.debug("BGP UPDATE message received from "+this.remotePeerIP);
 						if(this.getUpdateFrom()){
-							log.info("added to dispatcher");
+							//log.info("added to dispatcher");
 							BGP4Update bgp4Update = new BGP4Update(msg);
 							log.debug(bgp4Update.toString());
 							bgp4Update.setLearntFrom(this.remotePeerIP.getHostAddress() );

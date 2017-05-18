@@ -196,11 +196,11 @@ public class UpdateProccesorThread extends Thread {
 									continue;
 								case NLRITypes.IT_Node_NLRI:
 									log.debug(updateMsg.toString());
-									log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaReceived IT node NLRI");
+									log.info("Received IT node NLRI");
 									fillITNodeInformation((ITNodeNLRI)(nlri), learntFrom);
 									continue;
 								case NLRITypes.Slice_NLRI:
-									log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaReceived Slice NLRI");
+									log.info("Received Slice NLRI");
 									//log.info(updateMsg.toString());
 									fillSliceInformation((SliceNLRI)(nlri), learntFrom);
 									continue;
@@ -751,7 +751,7 @@ public class UpdateProccesorThread extends Thread {
 		}else if (domainTEDB==null){
 			simpleTEDB = new SimpleTEDB();
 			simpleTEDB.createGraph();
-			log.info("not present, we need to create intra tedb with id "+SNodeNLRI.getNodeId());
+			log.debug("not present, we need to create intra tedb with id "+SNodeNLRI.getNodeId());
 
 			try {
 				simpleTEDB.setDomainID((Inet4Address) InetAddress.getByName(SNodeNLRI.getNodeId()));
@@ -772,7 +772,7 @@ public class UpdateProccesorThread extends Thread {
 		log.debug("Received Slice with key "+elem.key+" and value "+elem.value);
 
 		if(simpleTEDB.getSlices()==null){
-			log.info("slices in ted are null");
+			log.debug("slices in ted are null");
 			Slices slices = new Slices();
 			slices.setLearntFrom(learntFrom);
 			slices.setdomainID(SNodeNLRI.getNodeId());

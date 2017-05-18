@@ -324,9 +324,10 @@ public class BGP4Parameters {
 					}
 					else if (qName.equalsIgnoreCase("sliceLoad")){
 						log.info("Found slice configuration");
+						isSlices=true;
 					}
 					else if (qName.equalsIgnoreCase("sliceIP")){
-						isSlices=true;
+
 						sliceIP = tempVal.trim();
 						log.info("Slice IP="+sliceIP);
 					}
