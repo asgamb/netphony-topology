@@ -176,16 +176,10 @@ public class UpdateSlices implements Runnable {
 	public void run() {
 		String response = "";
 
-		try
-		{
 			response = queryForSlices();//query for topology
 			log.info("response for Slices:::"+response);
 			parseSlices(response);
-		}
-		catch (Exception e)
-		{
-			log.info(e.toString());
-		}
+		
 	}
 
 
