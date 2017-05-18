@@ -337,6 +337,13 @@ public class BGPPeer {
 			sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB);
 		}
 		executor.scheduleWithFixedDelay(sendTopologyTask, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
+		if (params.isSlice() == true){
+			logServer.info("is sliced");
+			sliceUpdater.configure(params.getSlicePath(), params.getSliceIP(), params.getSlicePort(), params.getSliceDomain(), intraTEDBs);
+			//	sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
+			logServer.info("running slice update");
+			executor.scheduleWithFixedDelay(sliceUpdater, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
+		}
 	}
 
 	
