@@ -155,7 +155,7 @@ public class BGPPeer {
 //		FileHandler fh2;
 //		try {
 //			fh=new FileHandler(params.getBGP4LogFile());
-			logParser=LoggerFactory.getLogger("BGP4Parser");
+			logParser=LoggerFactory.getLogger("BGP4Peer");
 //			logParser.addHandler(fh);
 //			logParser.setLevel(Level.ALL);
 //			fh1=new FileHandler(params.getBGP4LogFileClient());
@@ -208,6 +208,7 @@ public class BGPPeer {
 			saveTopologyDB.configure(intraTEDBs, multiDomainTEDB, params.isSaveTopologyDB(), params.getTopologyDBIP().getHostAddress(), params.getTopologyDBport());
 		}
 		if (params.isSlice() == true){
+			logParser.info("is sliced");
 			sliceUpdater.configure(params.getSlicePath(), params.getSliceIP(), params.getSlicePort(), params.getSliceDomain(), intraTEDBs);
 		}
 
@@ -319,10 +320,11 @@ public class BGPPeer {
 	}
 
 	public void startSlice(){
-		//if (params.isSlice()) {
-		//	sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
-		//}
-		executor.scheduleWithFixedDelay(sliceUpdater, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
+		if (params.isSlice()) {
+			//	sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
+
+			executor.scheduleWithFixedDelay(sliceUpdater, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
+		}
 	}
 
 

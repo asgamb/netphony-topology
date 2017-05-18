@@ -2,7 +2,7 @@
 <config>
 	<!-- TCP port where the BGP is listening for incoming bgp4 connections. Optional Parameter. Default value: 179 (BGP Port)  --> 
 	<BGP4Port>179</BGP4Port>
-	<BGPIdentifier>10.19.200.204</BGPIdentifier>
+	<BGPIdentifier>172.17.18.104</BGPIdentifier>
 <!-- TCP port to connect to manage the BGP connection. Default value: 1112 -->
 	<BGP4ManagementPort>1111</BGP4ManagementPort> 
 	<!-- Peers to which this Peer is going to establish connection -->
@@ -13,11 +13,17 @@
                 <peerPort>44179</peerPort>
     </configPeer-->
 	<configPeer>
-                <peer>10.12.100.66</peer>
+                <peer>172.17.11.66</peer>
                 <export>true</export>
                 <import>true</import>
                 <peerPort>179</peerPort>
     </configPeer>
+	<sliceLoad>
+		<IP>localhost</IP>
+		<port>8888</port>
+		<path>/providers.json</path>
+		<domain>0.0.0.1</domain>
+	</sliceLoad>
 	<!-- Ficheros log (servidor, protocolo PCEP y OSPF). Campos opcionales-->
 	<BGP4LogFile>BGP4Parser-BGPLS1.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
 	<BGP4LogFileClient>BGP4Client-BGPLS1.log</BGP4LogFileClient><!-- Default value: BGP4Client.log-->
