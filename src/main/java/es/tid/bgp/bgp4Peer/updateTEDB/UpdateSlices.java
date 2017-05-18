@@ -2,8 +2,8 @@ package es.tid.bgp.bgp4Peer.updateTEDB;
 
 import es.tid.bgp.bgp4.update.fields.MapKeyValue;
 import es.tid.tedb.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,6 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.util.Hashtable;
 import java.util.LinkedList;
-
-//import org.json.simple.JSONArray;
-//import org.json.simple.JSONObject;
-//import org.json.simple.parser.JSONParser;
 
 
 /**
@@ -63,7 +59,7 @@ public class UpdateSlices implements Runnable {
 		{
 			URL topoplogyURL = new URL("http://"+this.IPSlicer+":"+this.portSlicer+this.pathSlicer);
 
-			log.info("http://"+this.IPSlicer+":"+this.portSlicer+this.pathSlicer);
+			log.debug("http://"+this.IPSlicer+":"+this.portSlicer+this.pathSlicer);
 
 			URLConnection yc = topoplogyURL.openConnection();
 			BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
@@ -85,39 +81,39 @@ public class UpdateSlices implements Runnable {
 	private void parseSlices(String response)
 	{
 		log.info("running slicer");
+
+		DomainTEDB domainTEDB= null;
+
+		domainTEDB=(DomainTEDB)intraTEDBs.get(localDomain);
+		SimpleTEDB simpleTEDB=null;
+		if (domainTEDB instanceof SimpleTEDB){
+			simpleTEDB = (SimpleTEDB) domainTEDB;
+			log.info("Present intra tedb with id "+localDomain);
+		}else if (domainTEDB==null){
+			simpleTEDB = new SimpleTEDB();
+			simpleTEDB.createGraph();
+
+			try {
+				simpleTEDB.setDomainID((Inet4Address) InetAddress.getByName(localDomain));
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			this.intraTEDBs.put(localDomain, simpleTEDB);
+
+		}
+		else {
+			log.error("PROBLEM: TEDB not compatible");
+			return;
+		}
 		try {
-
-			DomainTEDB domainTEDB= null;
-
-			domainTEDB=(DomainTEDB)intraTEDBs.get(localDomain);
-			SimpleTEDB simpleTEDB=null;
-			if (domainTEDB instanceof SimpleTEDB){
-				simpleTEDB = (SimpleTEDB) domainTEDB;
-			}else if (domainTEDB==null){
-				simpleTEDB = new SimpleTEDB();
-				simpleTEDB.createGraph();
-				log.info("not present, we need to create intra tedb with id "+localDomain);
-
-				try {
-					simpleTEDB.setDomainID((Inet4Address) InetAddress.getByName(localDomain));
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
-				this.intraTEDBs.put(localDomain, simpleTEDB);
-
-			}
-			else {
-				log.error("PROBLEM: TEDB not compatible");
-				return;
-			}
-
-			//log.info("Inside parseJSON");
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(response);
 
-			JSONObject objj= (JSONObject) obj;
+			JSONObject objj= (org.json.simple.JSONObject) obj;
 			//JSONArray msg = (JSONArray) obj;
-			JSONArray metadata = objj.getJSONArray("metadata");
+			JSONArray metadata = (org.json.simple.JSONArray) objj.get("metadata");
+			//log.info("Inside parseJSON");
+
 			if(simpleTEDB.getSlices()==null){
 				log.info("slices in ted are null");
 				Slices slices = new Slices();
@@ -130,10 +126,10 @@ public class UpdateSlices implements Runnable {
 				simpleTEDB.setSlices(slices);
 			}
 
-			for (int i = 0; i < metadata.length(); ++i) {
-				JSONObject metax = metadata.getJSONObject(i);
-				String key = metax.getString("key");
-				String value = metax.getString("value");
+			for (int i = 0; i < metadata.size(); ++i) {
+				JSONObject metax = (JSONObject) metadata.get(i);
+				String key = (String) metax.get("key");
+				String value = (String) metax.get("value");
 				log.info("read key="+key+" and value="+value);// ...
 				MapKeyValue elem = new MapKeyValue();
 				elem.setKey(key);

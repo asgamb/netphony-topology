@@ -3,8 +3,8 @@ package es.tid.bgp.bgp4Peer.peer;
 import es.tid.bgp.bgp4.update.fields.MapKeyValue;
 import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.TEDB;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 
@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
 import java.util.Hashtable;
 
 //import org.json.simple.JSONArray;
@@ -89,6 +90,9 @@ class UpdateSlicesTest {
 		return response;
 	}
 
+
+
+
 	private void parseSlices(String response)
 	{
 		System.out.println("running slicer");
@@ -124,7 +128,9 @@ class UpdateSlicesTest {
 
 			JSONObject objj= (JSONObject) obj;
 			//JSONArray msg = (JSONArray) obj;
-			JSONArray metadata = objj.getJSONArray("metadata");
+			JSONArray metadata = (JSONArray) objj.get("metadata");
+
+			//JSONArray metadata = objj.getJSONArray("metadata");
 			/*if(simpleTEDB.getSlices()==null){
 				log.info("slices in ted are null");
 				Slices slices = new Slices();
@@ -137,10 +143,10 @@ class UpdateSlicesTest {
 				simpleTEDB.setSlices(slices);
 			}*/
 
-			for (int i = 0; i < metadata.length(); ++i) {
-				JSONObject metax = metadata.getJSONObject(i);
-				String key = metax.getString("key");
-				String value = metax.getString("value");
+			for (int i = 0; i < metadata.size(); ++i) {
+				JSONObject metax = (JSONObject) metadata.get(i);
+				String key = (String) metax.get("key");
+				String value = (String) metax.get("value");
 				System.out.println("read key="+key+" and value="+value);// ...
 				MapKeyValue elem = new MapKeyValue();
 				elem.setKey(key);
@@ -178,9 +184,7 @@ class UpdateSlicesTest {
 	}
 
 
-
-
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		String response = "";
 		UpdateSlicesTest test= new UpdateSlicesTest();
 		test.configure("/providers.json","172.17.18.104",8888,"0.0.0.1");
