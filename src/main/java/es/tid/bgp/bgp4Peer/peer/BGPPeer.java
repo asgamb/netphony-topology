@@ -322,7 +322,7 @@ public class BGPPeer {
 	public void startSlice(){
 		if (params.isSlice()) {
 			//	sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
-
+			logParser.info("running slice update");
 			executor.scheduleWithFixedDelay(sliceUpdater, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
 		}
 	}

@@ -53,7 +53,7 @@ public class UpdateSlices implements Runnable {
 		this.portSlicer=port;
 		this.localDomain=domain;
 		this.intraTEDBs=intraTEDBs;
-
+		log.info("slicer configured");
 	}
 
 	private String queryForSlices()
@@ -84,6 +84,7 @@ public class UpdateSlices implements Runnable {
 
 	private void parseSlices(String response)
 	{
+		log.info("running slicer");
 		try {
 
 			DomainTEDB domainTEDB= null;
@@ -113,6 +114,7 @@ public class UpdateSlices implements Runnable {
 			//log.info("Inside parseJSON");
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(response);
+
 			JSONObject objj= (JSONObject) obj;
 			//JSONArray msg = (JSONArray) obj;
 			JSONArray metadata = objj.getJSONArray("metadata");
@@ -176,7 +178,6 @@ public class UpdateSlices implements Runnable {
 
 		try
 		{
-
 			response = queryForSlices();//query for topology
 			log.info("response for Slices:::"+response);
 			parseSlices(response);
