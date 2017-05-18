@@ -1,23 +1,22 @@
-package es.tid.bgp.bgp4Peer.updateTEDB;
+package es.tid.bgp.bgp4Peer.peer;
 
 import es.tid.bgp.bgp4.update.fields.MapKeyValue;
-import es.tid.tedb.*;
+import es.tid.tedb.MultiDomainTEDB;
+import es.tid.tedb.TEDB;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 //import org.json.simple.JSONArray;
 //import org.json.simple.JSONObject;
 //import org.json.simple.parser.JSONParser;
-
 
 /**
  * This class is in charge of storing the BGP4 update messages in a queue to be processing 
@@ -25,7 +24,7 @@ import java.util.LinkedList;
  * @author pac
  *
  */
-public class UpdateSlices implements Runnable {
+class UpdateSlicesTest {
 
 	//TEDBs
 	private Hashtable<String,TEDB> intraTEDBs;
@@ -34,7 +33,7 @@ public class UpdateSlices implements Runnable {
 	private MultiDomainTEDB multiDomainTEDB;
 
 	private boolean isTest=false;
-	private Logger log;
+	private static Logger log;
 
 	private String pathSlicer;
 	private String IPSlicer;
@@ -43,8 +42,8 @@ public class UpdateSlices implements Runnable {
 
 
 
-	public UpdateSlices(){
-		log = LoggerFactory.getLogger("BGP4Peer");
+	public UpdateSlicesTest(){
+		//log = LoggerFactory.getLogger("BGP4Peer");
 	}
 
 	public void configure(String path, String ip, int port, String domain, Hashtable<String,TEDB> intraTEDBs){
@@ -55,6 +54,14 @@ public class UpdateSlices implements Runnable {
 		this.intraTEDBs=intraTEDBs;
 		log.info("slicer configured");
 	}
+	public void configure(String path, String ip, int port, String domain){
+		this.pathSlicer=path;
+		this.IPSlicer=ip;
+		this.portSlicer=port;
+		this.localDomain=domain;
+
+		//log.info("slicer configured");
+	}
 
 	private String queryForSlices()
 	{
@@ -63,7 +70,7 @@ public class UpdateSlices implements Runnable {
 		{
 			URL topoplogyURL = new URL("http://"+this.IPSlicer+":"+this.portSlicer+this.pathSlicer);
 
-			log.info("http://"+this.IPSlicer+":"+this.portSlicer+this.pathSlicer);
+			System.out.println("http://"+this.IPSlicer+":"+this.portSlicer+this.pathSlicer);
 
 			URLConnection yc = topoplogyURL.openConnection();
 			BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
@@ -77,17 +84,17 @@ public class UpdateSlices implements Runnable {
 		}
 		catch (Exception e)
 		{
-			log.info(e.toString());
+			System.out.println(e.toString());
 		}
 		return response;
 	}
 
 	private void parseSlices(String response)
 	{
-		log.info("running slicer");
+		System.out.println("running slicer");
 		try {
 
-			DomainTEDB domainTEDB= null;
+			/*DomainTEDB domainTEDB= null;
 
 			domainTEDB=(DomainTEDB)intraTEDBs.get(localDomain);
 			SimpleTEDB simpleTEDB=null;
@@ -110,7 +117,7 @@ public class UpdateSlices implements Runnable {
 				log.error("PROBLEM: TEDB not compatible");
 				return;
 			}
-
+			*/
 			//log.info("Inside parseJSON");
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(response);
@@ -118,7 +125,7 @@ public class UpdateSlices implements Runnable {
 			JSONObject objj= (JSONObject) obj;
 			//JSONArray msg = (JSONArray) obj;
 			JSONArray metadata = objj.getJSONArray("metadata");
-			if(simpleTEDB.getSlices()==null){
+			/*if(simpleTEDB.getSlices()==null){
 				log.info("slices in ted are null");
 				Slices slices = new Slices();
 				slices.setLearntFrom("local");
@@ -128,19 +135,19 @@ public class UpdateSlices implements Runnable {
 				//slicesList.add(elem);
 				slices.setSlices(slicesList);
 				simpleTEDB.setSlices(slices);
-			}
+			}*/
 
 			for (int i = 0; i < metadata.length(); ++i) {
 				JSONObject metax = metadata.getJSONObject(i);
 				String key = metax.getString("key");
 				String value = metax.getString("value");
-				log.info("read key="+key+" and value="+value);// ...
+				System.out.println("read key="+key+" and value="+value);// ...
 				MapKeyValue elem = new MapKeyValue();
 				elem.setKey(key);
 				elem.setValue(value);
-				log.debug("Received Slice with key "+elem.key+" and value "+elem.value);
+				System.out.println("Received Slice with key "+elem.key+" and value "+elem.value);
 				boolean found=false;
-				if (simpleTEDB.getSlices().getSlices().size()==0){
+				/*if (simpleTEDB.getSlices().getSlices().size()==0){
 					log.info("Slice dict already created simply add Slice with key "+elem.key+" and value "+elem.value);
 					simpleTEDB.getSlices().getSlices().add(elem);
 				}
@@ -158,36 +165,31 @@ public class UpdateSlices implements Runnable {
 						simpleTEDB.getSlices().addSlice(elem);
 						log.info("new slice added");
 					}
-				}
+				}*/
 
 			}
-			log.info(simpleTEDB.getSlices().toString());
+			//log.info(simpleTEDB.getSlices().toString());
 
 		}
 		catch (Exception e)
 		{
-			log.info(e.toString());
+			System.out.println(e.toString());
 		}
 	}
 
 
 
 
-	public void run() {
+	public static void main(String[] args) {
 		String response = "";
+		UpdateSlicesTest test= new UpdateSlicesTest();
+		test.configure("/providers.json","172.17.18.104",8888,"0.0.0.1");
 
-		try
-		{
-			response = queryForSlices();//query for topology
-			log.info("response for Slices:::"+response);
-			parseSlices(response);
+			response = test.queryForSlices();//query for topology
+		    System.out.println("response for Slices:::"+response);
+			test.parseSlices(response);
 		}
-		catch (Exception e)
-		{
-			log.info(e.toString());
-		}
+
 	}
 
 
-
-}
