@@ -22,7 +22,7 @@
 		<sliceIP>172.17.18.104</sliceIP>
 		<sliceport>8888</sliceport>
 		<slicepath>/providers.json</slicepath>
-		<slicedomain>0.0.0.1</slicedomain>
+		<slicedomain>0.0.0.2</slicedomain>
 	</sliceLoad>
 	<!-- Ficheros log (servidor, protocolo PCEP y OSPF). Campos opcionales-->
 	<BGP4LogFile>BGP4Parser-BGPLS2.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->

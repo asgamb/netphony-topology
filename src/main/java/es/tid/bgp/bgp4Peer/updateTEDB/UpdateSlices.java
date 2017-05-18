@@ -80,7 +80,7 @@ public class UpdateSlices implements Runnable {
 
 	private void parseSlices(String response)
 	{
-		log.info("running slicer");
+		log.debug("running slicer");
 
 		DomainTEDB domainTEDB= null;
 
@@ -88,7 +88,7 @@ public class UpdateSlices implements Runnable {
 		SimpleTEDB simpleTEDB=null;
 		if (domainTEDB instanceof SimpleTEDB){
 			simpleTEDB = (SimpleTEDB) domainTEDB;
-			log.info("Present intra tedb with id "+localDomain);
+			log.debug("Present intra tedb with id "+localDomain);
 		}else if (domainTEDB==null){
 			simpleTEDB = new SimpleTEDB();
 			simpleTEDB.createGraph();
@@ -115,7 +115,7 @@ public class UpdateSlices implements Runnable {
 			//log.info("Inside parseJSON");
 
 			if(simpleTEDB.getSlices()==null){
-				log.info("slices in ted are null");
+				log.debug("slices in ted are null");
 				Slices slices = new Slices();
 				slices.setLearntFrom("local");
 				slices.setdomainID(localDomain);
@@ -130,14 +130,14 @@ public class UpdateSlices implements Runnable {
 				JSONObject metax = (JSONObject) metadata.get(i);
 				String key = (String) metax.get("key");
 				String value = (String) metax.get("value");
-				log.info("read key="+key+" and value="+value);// ...
+				log.debug("read key="+key+" and value="+value);// ...
 				MapKeyValue elem = new MapKeyValue();
 				elem.setKey(key);
 				elem.setValue(value);
 				log.debug("Received Slice with key "+elem.key+" and value "+elem.value);
 				boolean found=false;
 				if (simpleTEDB.getSlices().getSlices().size()==0){
-					log.info("Slice dict already created simply add Slice with key "+elem.key+" and value "+elem.value);
+					log.debug("Slice dict already created simply add Slice with key "+elem.key+" and value "+elem.value);
 					simpleTEDB.getSlices().getSlices().add(elem);
 				}
 				else{
@@ -157,7 +157,7 @@ public class UpdateSlices implements Runnable {
 				}
 
 			}
-			log.info(simpleTEDB.getSlices().toString());
+			log.debug(simpleTEDB.getSlices().toString());
 
 		}
 		catch (Exception e)
@@ -173,7 +173,7 @@ public class UpdateSlices implements Runnable {
 		String response = "";
 
 			response = queryForSlices();//query for topology
-			log.info("response for Slices:::"+response);
+			log.debug("response for Slices:::"+response);
 			parseSlices(response);
 
 	}
