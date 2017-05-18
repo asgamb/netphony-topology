@@ -25,10 +25,10 @@
                 <peerPort>33179</peerPort>
     </configPeer>
 	<sliceLoad>
-		<IP>localhost</IP>
-		<port>8888</port>
-		<path>/providers.json</path>
-		<domain>0.0.0.1</domain>
+		<sliceIP>localhost</sliceIP>
+		<sliceport>8888</sliceport>
+		<slicepath>/providers.json</slicepath>
+		<slicedomain>0.0.0.1</slicedomain>
 	</sliceLoad>
 	<!-- Ficheros log (servidor, protocolo PCEP y OSPF). Campos opcionales-->
 	<BGP4LogFile>BGP4Parser-BGPLS2.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
