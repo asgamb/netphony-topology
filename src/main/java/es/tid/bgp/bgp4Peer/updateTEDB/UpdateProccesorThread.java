@@ -783,10 +783,10 @@ public class UpdateProccesorThread extends Thread {
 			simpleTEDB.setSlices(slices);
 		}
 		else{
-			log.info("slices present in ted");
+			log.debug("slices present in ted");
 			boolean found=false;
 			if (simpleTEDB.getSlices().getSlices().size()==0){
-				log.info("Slice dict already created simply add SLice with key "+elem.key+" and value "+elem.value);
+				log.debug("Slice dict already created simply add SLice with key "+elem.key+" and value "+elem.value);
 				simpleTEDB.getSlices().getSlices().add(elem);
 			}
 			else{
@@ -803,11 +803,11 @@ public class UpdateProccesorThread extends Thread {
 				}
 				if (found==false){
 					simpleTEDB.getSlices().addSlice(elem);
-					log.info("It works");
+					log.debug("Slice added");
 				}
 			}
 		}
-		log.info(simpleTEDB.getSlices().toString());
+		log.debug(simpleTEDB.getSlices().toString());
 	}
 
 
