@@ -146,7 +146,7 @@ public class UpdateSlices implements Runnable {
 						MapKeyValue temp = simpleTEDB.getSlices().getSlices().get(k);
 						if ((temp.getKey().equals(elem.getKey()))&&(temp.getValue().equals(elem.getValue()))){
 							found = true;
-							log.info("Already present, nothing to do");
+							log.debug("Already present, nothing to do");
 							break;
 						}
 					}
