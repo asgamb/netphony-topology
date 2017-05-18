@@ -179,7 +179,7 @@ public class UpdateSlices implements Runnable {
 			response = queryForSlices();//query for topology
 			log.info("response for Slices:::"+response);
 			parseSlices(response);
-		
+
 	}
 
 

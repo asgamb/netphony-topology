@@ -318,10 +318,10 @@ public class BGPPeer {
 
 	public void startSlice(){
 		//if (params.isSlice() == true){
-			logParser.info("is sliced");
+			logServer.info("is sliced");
 			sliceUpdater.configure(params.getSlicePath(), params.getSliceIP(), params.getSlicePort(), params.getSliceDomain(), intraTEDBs);
 			//	sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
-			logParser.info("running slice update");
+			logServer.info("running slice update");
 			executor.scheduleWithFixedDelay(sliceUpdater, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
 		//}
 	}
@@ -329,6 +329,7 @@ public class BGPPeer {
 
 
 	public void startSendTopology(){
+		logServer.info("starting send Topology");
 		if (params.isTest()) {
 			sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
 		}
